@@ -49,6 +49,8 @@ struct last_map_t
 	char	end_reason[128];
 };
 
+// engine->IsMapValid() of the current SDK (VEngineServer023) wants "maps/<name>.bsp", the old interface took the name
+extern int	ManiIsMapValid(const char *map_name);
 extern map_t	*map_list;
 extern map_t	*votemap_list;
 extern map_t	*map_in_cycle_list;

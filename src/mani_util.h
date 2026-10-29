@@ -135,8 +135,8 @@ class ParamManager
 public:
 	ParamManager () {};
 	~ParamManager () {};
-	void	AddParam(const char *id, const int param) {int_list.insert(std::make_pair<BasicStr, int>(BasicStr(id), param));}
-	void	AddParam(const char *id, const char *param) {str_list.insert(std::make_pair<BasicStr, BasicStr>(BasicStr(id), BasicStr(param)));}
+	void	AddParam(const char *id, const int param) {int_list.insert(std::make_pair(BasicStr(id), param));}
+	void	AddParam(const char *id, const char *param) {str_list.insert(std::make_pair(BasicStr(id), BasicStr(param)));}
 	// Separate version for ... version
 	void	AddParamVar(const char *id, const char *param, ...) 
 	{
@@ -146,11 +146,11 @@ public:
 		va_start ( argptr, param );
 		vsnprintf( temp_str, sizeof(temp_str), param, argptr );
 		va_end   ( argptr );
-		str_list.insert(std::make_pair<BasicStr, BasicStr>(BasicStr(id), BasicStr(temp_str)));
+		str_list.insert(std::make_pair(BasicStr(id), BasicStr(temp_str)));
 	}
-	void	AddParam(const char *id, const float param) {float_list.insert(std::make_pair<BasicStr, float>(BasicStr(id), param));}
-	void	AddParam(const char *id, const bool param) {bool_list.insert(std::make_pair<BasicStr, bool>(BasicStr(id), param));}
-	void	AddParam(const char *id, void *param) {ptr_list.insert(std::make_pair<BasicStr, void *>(BasicStr(id), param));}
+	void	AddParam(const char *id, const float param) {float_list.insert(std::make_pair(BasicStr(id), param));}
+	void	AddParam(const char *id, const bool param) {bool_list.insert(std::make_pair(BasicStr(id), param));}
+	void	AddParam(const char *id, void *param) {ptr_list.insert(std::make_pair(BasicStr(id), param));}
 	bool	GetParam(const char *id, char **param)
 	{
 		std::map<BasicStr, BasicStr>::iterator itr = str_list.find(BasicStr(id));

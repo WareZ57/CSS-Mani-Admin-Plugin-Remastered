@@ -51,8 +51,11 @@
 #include "mani_reservedslot.h"
 #include "shareddefs.h"
 #include "steamclientpublic.h"
+#ifndef MANI_NO_DETOURS	// x86 detours (mani_detours.cpp), not built: their engine symbols are gone, no "fill slot" mode
 #include "mani_detours.h"
 #include "detour_macros.h"
+
+#endif
 #include "mani_mainclass.h"
 #include "mani_playerkick.h" 
 #if defined ( GAME_CSGO )
@@ -81,8 +84,11 @@ static int sort_active_players_by_kill_rate ( const void *m1,  const void *m2);
 static int sort_active_players_by_kd_ratio ( const void *m1,  const void *m2);
 
 static int sort_reserve_slots_by_steam_id ( const void *m1,  const void *m2);
+#ifndef MANI_NO_DETOURS	// x86 detours (mani_detours.cpp), not built: their engine symbols are gone, no "fill slot" mode
 static CDetour * ManiClientConnectDetour;
 static CDetour * ManiNetSendPacketDetour;
+#endif
+
 
 inline bool FStruEq(const char *sz1, const char *sz2)
 {
@@ -108,6 +114,7 @@ bool FillSlotMode() {
 	
 }
 
+#ifndef MANI_NO_DETOURS	// x86 detours (mani_detours.cpp), not built: their engine symbols are gone, no "fill slot" mode
 #define COPY_BYTE(target) \
 	target = data[0]; \
 	data++; \
@@ -180,7 +187,9 @@ bool FillINFOQuery ( const mem_t* data, int data_len, A2S_INFO_t &info, mem_t **
 
 	return true;
 }
+#endif
 
+#ifndef MANI_NO_DETOURS	// x86 detours (mani_detours.cpp), not built: their engine symbols are gone, no "fill slot" mode
 #if defined ( GAME_CSGO )
 #define CCD_MEMBER_CALL(pw) MEMBER_CALL(ConnectClientDetour)(p1,p2,p3,p4,p5,pw,p7,p8,p9,pA,pB)
 DECL_MEMBER_DETOUR11_void(ConnectClientDetour, void *, int, int, int, const char *, const char *, const char*, int, void *, bool, CrossPlayPlatform_t ) {
@@ -261,19 +270,21 @@ DECL_MEMBER_DETOUR10_void(ConnectClientDetour, void *, int, int, int, const char
 	return CCD_MEMBER_CALL(p6);
 #endif
 }
+#endif
 
 #if defined ( GAME_CSGO )
 const char * CSteamID::Render() const {
    static char szSteamID[64];
 	_snprintf(szSteamID, sizeof(szSteamID), "STEAM_1:%u:%u", (m_steamid.m_comp.m_unAccountID % 2) ? 1 : 0, (int32)m_steamid.m_comp.m_unAccountID/2);
 #else
-char * CSteamID::Render() const {
+const char * CSteamID::Render() const {
    static char szSteamID[64];
-   _snprintf(szSteamID, sizeof(szSteamID), "STEAM_0:%u:%u", (m_unAccountID % 2) ? 1 : 0, (int32)m_unAccountID/2);
+   _snprintf(szSteamID, sizeof(szSteamID), "STEAM_0:%u:%u", (m_steamid.m_comp.m_unAccountID % 2) ? 1 : 0, (int32)m_steamid.m_comp.m_unAccountID/2);
 #endif
 	return szSteamID;
 }
 
+#ifndef MANI_NO_DETOURS	// x86 detours (mani_detours.cpp), not built: their engine symbols are gone, no "fill slot" mode
 #if defined ( GAME_CSGO )
 #define NSPD_NON_MEMBER_CALL NON_MEMBER_CALL(NET_SendPacketDetour)(p1,p2,p3,p4,p5,p6,p7,p8)
 DECL_DETOUR8_void( NET_SendPacketDetour, void *, int, void *, const mem_t *, int, void *, bool, unsigned int) {
@@ -316,6 +327,8 @@ DECL_DETOUR5_void( NET_SendPacketDetour, void *, int, void *, const mem_t *, int
 	return NSPD_NON_MEMBER_CALL;
 }
 
+#endif
+
 
 
 ManiReservedSlot::ManiReservedSlot()
@@ -352,6 +365,7 @@ void ManiReservedSlot::Load(void)
 
 	if (!connect_client_addr || !netsendpacket_addr) return; // something is wrong with the sigscan
 
+#ifndef MANI_NO_DETOURS	// x86 detours (mani_detours.cpp), not built: their engine symbols are gone, no "fill slot" mode
 	ManiClientConnectDetour = CDetourManager::CreateDetour( "ConnectClient", connect_client_addr, GET_MEMBER_CALLBACK(ConnectClientDetour), GET_MEMBER_TRAMPOLINE(ConnectClientDetour));
 	if ( ManiClientConnectDetour )
 		ManiClientConnectDetour->DetourFunction( );
@@ -361,6 +375,8 @@ void ManiReservedSlot::Load(void)
 	ManiNetSendPacketDetour = CDetourManager::CreateDetour( "NETSendPacket", netsendpacket_addr, GET_NON_MEMBER_CALLBACK(NET_SendPacketDetour), GET_NON_MEMBER_TRAMPOLINE(NET_SendPacketDetour) );
 	if ( ManiNetSendPacketDetour )
 		ManiNetSendPacketDetour->DetourFunction( );
+
+#endif
 
 	this->CleanUp();
 }
@@ -436,11 +452,13 @@ void ManiReservedSlot::DisconnectPlayer(player_t *player_ptr)
 // Purpose: Remove the detours
 //---------------------------------------------------------------------------------
 void ManiReservedSlot::Unload() {
+#ifndef MANI_NO_DETOURS
 	if ( ManiClientConnectDetour )
 		ManiClientConnectDetour->Destroy();
 
 	if ( ManiNetSendPacketDetour )
 		ManiNetSendPacketDetour->Destroy();
+#endif
 }
 
 //---------------------------------------------------------------------------------

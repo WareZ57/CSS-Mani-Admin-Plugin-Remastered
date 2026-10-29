@@ -125,9 +125,9 @@ void LanguageGameFrame(void)
 	if (current_time > next_time_check)
 	{
 		SayToAll(LIGHT_GREEN_CHAT, true, "MANI-ADMIN-PLUGIN: Warning, your server plugin english.cfg file is out of date which will cause instability!"); 
-		SayToAll(LIGHT_GREEN_CHAT, true, "Please download http://www.mani-admin-plugin.com/mani_admin_plugin/language_pack/english.cfg");
+		SayToAll(LIGHT_GREEN_CHAT, true, "Please download https://github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered (cfg/mani_admin_plugin/language/english.cfg)");
 		MMsg("MANI-ADMIN-PLUGIN: Warning, your server plugin english.cfg file is out of date which will cause instability!\n"); 
-		MMsg("Please download http://www.mani-admin-plugin.com/mani_admin_plugin/language_pack/english.cfg\n");
+		MMsg("Please download https://github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered (cfg/mani_admin_plugin/language/english.cfg)\n");
 		next_time_check = current_time + 5;
 	}
 }

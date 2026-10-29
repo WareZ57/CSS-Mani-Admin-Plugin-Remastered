@@ -50,13 +50,22 @@
 #include "cbaseentity.h"
 #include "mani_linuxutils.h"
 
+// ELF structures of the server's own architecture (Elf32_* or Elf64_*)
+#ifdef PLATFORM_64BITS
+#define MANI_ELF_ST_TYPE ELF64_ST_TYPE
+#else
+#define MANI_ELF_ST_TYPE ELF32_ST_TYPE
+#endif
+
 static int sort_by_address ( const void *m1,  const void *m2);
 static int sort_by_mangled ( const void *m1,  const void *m2);
 static int sort_by_demangled ( const void *m1,  const void *m2);
 
 static int sort_by_address ( const void *m1,  const void *m2)
 {
-	return ((long) (*(symbol_t *) m1).ptr - (long) (*(symbol_t *) m2).ptr);
+	// compared, not subtracted: the difference of two 64-bit addresses does not fit in the int result
+	uintptr_t a1 = (uintptr_t) (*(symbol_t *) m1).ptr, a2 = (uintptr_t) (*(symbol_t *) m2).ptr;
+	return (a1 > a2) - (a1 < a2);
 }
 
 static int sort_by_mangled ( const void *m1,  const void *m2)
@@ -100,10 +109,10 @@ bool SymbolMap::GetLib(const char *lib_name)
         int dlfile;
         struct link_map *dlmap;
         struct stat dlstat;
-        Elf32_Ehdr *file_hdr;
+        ElfW(Ehdr) *file_hdr;
         uintptr_t map_base;
-        Elf32_Shdr *sections, *shstrtab_hdr, *symtab_hdr, *strtab_hdr;
-        Elf32_Sym *symtab;
+        ElfW(Shdr) *sections, *shstrtab_hdr, *symtab_hdr, *strtab_hdr;
+        ElfW(Sym) *symtab;
         uint16_t section_count;
         const char *shstrtab, *strtab;
         uint32_t symbol_count;
@@ -122,7 +131,7 @@ bool SymbolMap::GetLib(const char *lib_name)
         }
 
         /* Map library file into memory */
-        file_hdr = (Elf32_Ehdr *)mmap(NULL, dlstat.st_size, PROT_READ, MAP_PRIVATE, dlfile, 0);
+        file_hdr = (ElfW(Ehdr) *)mmap(NULL, dlstat.st_size, PROT_READ, MAP_PRIVATE, dlfile, 0);
         map_base = (uintptr_t)file_hdr;
         if (file_hdr == MAP_FAILED)
         {
@@ -138,7 +147,7 @@ bool SymbolMap::GetLib(const char *lib_name)
                 return false;
         }
 
-        sections = (Elf32_Shdr *)(map_base + file_hdr->e_shoff);
+        sections = (ElfW(Shdr) *)(map_base + file_hdr->e_shoff);
         section_count = file_hdr->e_shnum;
         /* Get ELF section header string table */
         shstrtab_hdr = &sections[file_hdr->e_shstrndx];
@@ -147,7 +156,7 @@ bool SymbolMap::GetLib(const char *lib_name)
         /* Iterate sections while looking for ELF symbol table and string table */
         for (uint16_t i = 0; i < section_count; i++)
         {
-                Elf32_Shdr &hdr = sections[i];
+                ElfW(Shdr) &hdr = sections[i];
                 const char *section_name = shstrtab + hdr.sh_name;
 
                 if (strcmp(section_name, ".symtab") == 0)
@@ -167,14 +176,14 @@ bool SymbolMap::GetLib(const char *lib_name)
                 return false;
         }
 
-        symtab = (Elf32_Sym *)(map_base + symtab_hdr->sh_offset);
+        symtab = (ElfW(Sym) *)(map_base + symtab_hdr->sh_offset);
         strtab = (const char *)(map_base + strtab_hdr->sh_offset);
         symbol_count = symtab_hdr->sh_size / symtab_hdr->sh_entsize;
 
         for (uint32_t i = 0; i < symbol_count; i++)
         {
-                Elf32_Sym &sym = symtab[i];
-                unsigned char sym_type = ELF32_ST_TYPE(sym.st_info);
+                ElfW(Sym) &sym = symtab[i];
+                unsigned char sym_type = MANI_ELF_ST_TYPE(sym.st_info);
                 const char *sym_name = strtab + sym.st_name;
 
                 // Skip symbols that are undefined or do not refer to functions or objects

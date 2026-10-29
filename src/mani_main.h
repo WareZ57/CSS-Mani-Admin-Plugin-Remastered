@@ -49,60 +49,60 @@ const int	gametypes_min_version = 3;
 #endif
 
 //majorrelease.minorrealse.patchlevel
-#define COMMON_CORE "1.2.23"
-#define COMMON_VERSION "Mani Admin Plugin 2014 V" COMMON_CORE
+#define COMMON_CORE "1.3.0"
+#define COMMON_VERSION "Mani Admin Plugin 2026 V" COMMON_CORE
 
 #ifdef GAME_CSGO
 #ifdef SOURCEMM
-#define PLUGIN_VERSION COMMON_VERSION " SMM CS:GO, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " SMM CS:GO, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " SMM"
 #else
-#define PLUGIN_VERSION COMMON_VERSION " VSP CS:GO, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " VSP CS:GO, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " VSP"
 #endif
 
 #elif defined (GAME_CSS)
 #ifdef SOURCEMM
-#define PLUGIN_VERSION COMMON_VERSION " SMM CS:S, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " SMM CS:S, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " SMM"
 #else
-#define PLUGIN_VERSION COMMON_VERSION " VSP CS:S, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " VSP CS:S, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " VSP"
 #endif
 
 #elif defined (GAME_DODS)
 #ifdef SOURCEMM
-#define PLUGIN_VERSION COMMON_VERSION " SMM DOD:S, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " SMM DOD:S, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " SMM"
 #else
-#define PLUGIN_VERSION COMMON_VERSION " VSP DOD:S, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " VSP DOD:S, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " VSP"
 #endif
 
 #elif defined (GAME_HL2DM)
 #ifdef SOURCEMM
-#define PLUGIN_VERSION COMMON_VERSION " SMM HL2:DM, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " SMM HL2:DM, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " SMM"
 #else
-#define PLUGIN_VERSION COMMON_VERSION " VSP HL2:DM, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " VSP HL2:DM, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " VSP"
 #endif
 
 #elif defined (GAME_TF2)
 #ifdef SOURCEMM
-#define PLUGIN_VERSION COMMON_VERSION " SMM TF2, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " SMM TF2, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " SMM"
 #else
-#define PLUGIN_VERSION COMMON_VERSION " VSP TF2, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " VSP TF2, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " VSP"
 #endif
 
 #else
 #ifdef SOURCEMM
-#define PLUGIN_VERSION COMMON_VERSION " SMM, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " SMM, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " SMM"
 #else
-#define PLUGIN_VERSION COMMON_VERSION " VSP, www.mani-admin-plugin.com"
+#define PLUGIN_VERSION COMMON_VERSION " VSP, github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered"
 #define PLUGIN_CORE_VERSION COMMON_CORE " VSP"
 #endif
 #endif

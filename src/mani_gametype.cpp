@@ -105,9 +105,9 @@ void ManiGameType::GameFrame(void)
 	if (current_time > this->next_time_check)
 	{
 		SayToAll(LIGHT_GREEN_CHAT, true, "MANI-ADMIN-PLUGIN: Warning, your server plugin gametypes.txt file is out of date which will cause instability!");
-		SayToAll(LIGHT_GREEN_CHAT, true, "Please download http://www.mani-admin-plugin.com/mani_admin_plugin/gametypes/gametypes.txt");
+		SayToAll(LIGHT_GREEN_CHAT, true, "Please download https://github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered (cfg/mani_admin_plugin/gametypes.txt)");
 		MMsg("MANI-ADMIN-PLUGIN: Warning, your server plugin gametypes.txt file is out of date which will cause instability!\n");
-		MMsg("Please download http://www.mani-admin-plugin.com/mani_admin_plugin/gametypes/gametypes.txt\n");
+		MMsg("Please download https://github.com/WareZ57/CSS-Mani-Admin-Plugin-Remastered (cfg/mani_admin_plugin/gametypes.txt)\n");
 		next_time_check = current_time + 30;
 	}
 }
@@ -128,6 +128,10 @@ void GetLinuxBins ( char *game, char *engine ) {
 #ifdef	GAME_CSGO
 	Q_strncpy ( engine, "./bin/engine.so", 256 );
 	Q_snprintf ( game, 256, "./%s/bin/server.so", gamedir );
+
+#elif 	defined	(GAME_CSS) && defined (PLATFORM_64BITS)
+	Q_strncpy ( engine, "./bin/linux64/engine_srv.so", 256 );
+	Q_snprintf ( game, 256, "./%s/bin/linux64/server_srv.so", gamedir );
 
 #elif 	defined	(GAME_CSS)
 	Q_strncpy ( engine, "./bin/engine_srv.so", 256 );
@@ -151,6 +155,33 @@ void GetLinuxBins ( char *game, char *engine ) {
 #endif
 }
 #endif
+// Linux keys of gametypes.txt: the 64-bit build reads "linux64_<key>" first, then "linux_<key>"
+static int GetLinuxInt(KeyValues *kv_ptr, const char *key, int default_value)
+{
+	char	key_name[64];
+
+	snprintf(key_name, sizeof(key_name), "linux_%s", key);
+	int value = kv_ptr->GetInt(key_name, default_value);
+#ifdef PLATFORM_64BITS
+	snprintf(key_name, sizeof(key_name), "linux64_%s", key);
+	value = kv_ptr->GetInt(key_name, value);
+#endif
+	return value;
+}
+
+static const char *GetLinuxString(KeyValues *kv_ptr, const char *key, const char *default_value)
+{
+	char	key_name[64];
+
+	snprintf(key_name, sizeof(key_name), "linux_%s", key);
+	const char *value = kv_ptr->GetString(key_name, default_value);
+#ifdef PLATFORM_64BITS
+	snprintf(key_name, sizeof(key_name), "linux64_%s", key);
+	value = kv_ptr->GetString(key_name, value);
+#endif
+	return value;
+}
+
 //---------------------------------------------------------------------------------
 // Purpose: Read in core config and setup
 //---------------------------------------------------------------------------------
@@ -322,7 +353,7 @@ void ManiGameType::Init(void)
 
 		voice_allowed = 1;
 #ifdef __linux__
-        voice_offset = temp_ptr->GetInt("linux_offset", 3);
+        voice_offset = GetLinuxInt(temp_ptr, "offset", 3);
 #else
 		voice_offset = temp_ptr->GetInt("win_offset", 2);
 #endif
@@ -336,7 +367,7 @@ void ManiGameType::Init(void)
 
 		spray_hook_allowed = 1;
 #ifdef __linux__
-        spray_hook_offset = temp_ptr->GetInt("linux_offset", 28);
+        spray_hook_offset = GetLinuxInt(temp_ptr, "offset", 28);
 #else
 		spray_hook_offset = temp_ptr->GetInt("win_offset", 28);
 #endif
@@ -350,7 +381,7 @@ void ManiGameType::Init(void)
 
 		spawn_point_allowed = 1;
 #ifdef __linux__
-        spawn_point_offset = temp_ptr->GetInt("linux_offset", 2);
+        spawn_point_offset = GetLinuxInt(temp_ptr, "offset", 2);
 #else
 		spawn_point_offset = temp_ptr->GetInt("win_offset", 2);
 #endif
@@ -379,6 +410,13 @@ void ManiGameType::Init(void)
 
 #if defined ( WIN32 )
 	temp_ptr = base_key_ptr->FindKey("vfuncs_windows", false );
+	if ( temp_ptr )
+	{
+		this->OverrideVFuncs(temp_ptr);
+	}
+#elif defined ( PLATFORM_64BITS )
+	// 64-bit vtables: only the indices that differ from the 32-bit Linux ones need to be listed
+	temp_ptr = base_key_ptr->FindKey("vfuncs_linux64", false );
 	if ( temp_ptr )
 	{
 		this->OverrideVFuncs(temp_ptr);
@@ -547,7 +585,7 @@ void	ManiGameType::GetVFuncs(KeyValues *kv_ptr)
 	return;
 }
 
-#if defined ( WIN32 )
+#if defined ( WIN32 ) || defined ( PLATFORM_64BITS )
 //---------------------------------------------------------------------------------
 // Purpose: Get Property offsets for windows if different
 //---------------------------------------------------------------------------------
@@ -601,8 +639,8 @@ void	ManiGameType::GetSigs(KeyValues *kv_ptr)
 
 			Q_strcpy(temp_sig.sig_name, sig_ptr->GetName());
 			temp_sig.win_index = sig_ptr->GetInt("win_index", 0);
-			temp_sig.linux_index = sig_ptr->GetInt("linux_index", 0);
-			Q_strcpy(temp_sig.linux_symbol, sig_ptr->GetString("linux_symbol", "NULL"));
+			temp_sig.linux_index = GetLinuxInt(sig_ptr, "index", 0);
+			Q_strcpy(temp_sig.linux_symbol, GetLinuxString(sig_ptr, "symbol", "NULL"));
 			Q_strcpy(temp_sig.sigscan, sig_ptr->GetString("sigscan", "NULL"));
 
 			temp_sig.win_sig_type = this->GetSigType((char *) sig_ptr->GetString("win_type", "NULL"));
@@ -614,7 +652,7 @@ void	ManiGameType::GetSigs(KeyValues *kv_ptr)
 			{
 				// 99% of the time the linux and win sigscan methods are the same so default the linux type to 
 				// be the same as the windows type if it doesn't exist in the file
-				temp_sig.linux_sig_type = this->GetSigType((char *) sig_ptr->GetString("linux_type", sig_ptr->GetString("win_type", "NULL")));
+				temp_sig.linux_sig_type = this->GetSigType((char *) GetLinuxString(sig_ptr, "type", sig_ptr->GetString("win_type", "NULL")));
 				if (temp_sig.linux_sig_type == -1)
 				{
 					valid_sig = false;

@@ -239,7 +239,7 @@ private:
 	void		DefaultValues(void);
 	bool		FindBaseKey(KeyValues *kv, KeyValues *base_key_ptr);
 	int			GetSigType(char *sig_type);
-#if defined ( WIN32 )
+#if defined ( WIN32 ) || defined ( PLATFORM_64BITS )
 	void		OverrideVFuncs(KeyValues *kv_ptr);
 #endif
 

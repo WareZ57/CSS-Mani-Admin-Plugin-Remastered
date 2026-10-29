@@ -76,6 +76,9 @@ public:
 	virtual void			ClientFullyConnect( edict_t *pEntity ) {};
 	virtual void			OnEdictAllocated( edict_t *edict ) {};
 	virtual void			OnEdictFreed( const edict_t *edict  ) {};
+#elif defined ( GAME_CSS ) // ISERVERPLUGINCALLBACKS004 of the current CS:S SDK
+	virtual void			OnEdictAllocated( edict_t *edict ) {};
+	virtual void			OnEdictFreed( const edict_t *edict  ) {};
 #endif
 //	virtual void FireGameEvent( IGameEvent * event );
 

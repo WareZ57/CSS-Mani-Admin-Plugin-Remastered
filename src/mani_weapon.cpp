@@ -415,6 +415,7 @@ void	ManiWeaponMgr::RemoveWeapons(player_t *player_ptr, bool refund, bool show_r
 	for (int i = 0; i < MAX_WEAPONS_USED; i++)
 	{
 		if ( !weapons[i] ) break; // for DS tool and listen servers ... order of processing different
+		if (!weapons[i]) continue;	// weapon not found in the game's weapon info
 		if (weapons[i]->GetDisplayID() == 0) continue;
 		if (!weapons[i]->CanBuy(player_ptr, 1, reason, limit, ratio) || knife_mode)
 		{
@@ -467,6 +468,7 @@ void ManiWeaponMgr::RoundStart()
 	for (int i = 0; i < MAX_WEAPONS_USED; i++)
 	{
 		if ( !weapons[i] ) break; // for DS tool and listen servers ... order of processing different
+		if (!weapons[i]) continue;	// weapon not found in the game's weapon info
 		if ( weapons[i]->GetDisplayID() == 0 ) continue;
 		if ( !weapons[i]->IsRestricted() ) continue;
 
@@ -676,6 +678,7 @@ void	ManiWeaponMgr::RestrictAll()
 	for (int i = 0; i < MAX_WEAPONS_USED; i++)
 	{
 		if ( !weapons[i] ) break; // for DS tool and listen servers ... order of processing different
+		if (!weapons[i]) continue;	// weapon not found in the game's weapon info
 		if (weapons[i]->GetDisplayID() == 0) continue;
 		weapons[i]->SetRestricted(true);
 		weapons[i]->SetTeamLimit(0);
@@ -688,6 +691,7 @@ void	ManiWeaponMgr::UnRestrictAll()
 	for (int i = 0; i < MAX_WEAPONS_USED; i++)
 	{
 		if ( !weapons[i] ) break; // for DS tool and listen servers ... order of processing different
+		if (!weapons[i]) continue;	// weapon not found in the game's weapon info
 		if (weapons[i]->GetDisplayID() == 0) continue;
 		weapons[i]->SetRestricted(false);
 		weapons[i]->SetTeamLimit(0);
@@ -719,6 +723,7 @@ bool	ManiWeaponMgr::SetWeaponRestriction
 		// No weapon found so check other names for weapons
 		for (int i = 0; i < MAX_WEAPONS_USED; i ++)
 		{
+			if (!weapons[i]) continue;	// weapon not found in the game's weapon info
 			if (stricmp(weapons[i]->GetWeaponName(), weapon_name) == 0)
 			{
 				weapon = weapons[i];
@@ -766,6 +771,7 @@ bool	ManiWeaponMgr::SetWeaponRatio
 		// No weapon found so check other names for weapons
 		for (int i = 0; i < MAX_WEAPONS_USED; i ++)
 		{
+			if (!weapons[i]) continue;	// weapon not found in the game's weapon info
 			if (strcmp(weapons[i]->GetWeaponName(), weapon_name) == 0)
 			{
 				weapon = weapons[i];

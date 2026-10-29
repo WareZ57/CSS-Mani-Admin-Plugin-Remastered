@@ -61,6 +61,7 @@
 #include "mani_gametype.h"
 #include "mani_vars.h"
 #include "mani_effects.h"
+#include "compat/convar_access.h"
 #include "mani_vfuncs.h"
 #include "cbaseentity.h"
 #include "beam_flags.h"
@@ -1814,13 +1815,13 @@ void	ProcessNoClipPlayer(player_t *player)
 
 	if (sv_cheats->GetInt() == 0)
 	{
-        sv_cheats->m_nFlags &= ~FCVAR_SPONLY;
-        sv_cheats->m_nFlags &= ~FCVAR_NOTIFY;
+        MANI_CVAR_FLAGS(sv_cheats) &= ~FCVAR_SPONLY;
+        MANI_CVAR_FLAGS(sv_cheats) &= ~FCVAR_NOTIFY;
 		sv_cheats->SetValue(1);
 		helpers->ClientCommand(player->entity, "noclip");
 		sv_cheats->SetValue(0);
-        sv_cheats->m_nFlags |= FCVAR_SPONLY;
-        sv_cheats->m_nFlags |= FCVAR_NOTIFY;
+        MANI_CVAR_FLAGS(sv_cheats) |= FCVAR_SPONLY;
+        MANI_CVAR_FLAGS(sv_cheats) |= FCVAR_NOTIFY;
 	}
 	else
 	{

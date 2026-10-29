@@ -5,15 +5,24 @@
 
 #include "mani_player.h"
 
+// Start of the game's CCSWeaponInfo: FileWeaponInfo_t (vtable pointer, 2 bools, szClassName[80], ...)
+// then CS:S fields up to m_iWeaponPrice. In 64-bit, FileWeaponInfo_t has a longer vtable pointer and
+// pointer members: szClassName at 10 instead of 6, and 48 bytes more in all (sizes from hl2sdk-css)
 class CCSWeaponInfo
 {
 public:
+#if defined ( PLATFORM_64BITS )
+	unsigned char dummy1[10];
+	char weapon_name[80];
+	unsigned char dummy2[2266];	// m_iWeaponPrice at 2356
+#else
 	unsigned char dummy1[6];
 	char weapon_name[80];
 #if !defined ( GAME_CSGO )
-	unsigned char dummy2[2222];
+	unsigned char dummy2[2222];	// m_iWeaponPrice at 2308
 #else
 	unsigned char dummy2[2614];
+#endif
 #endif
 	int	standard_price;
 };

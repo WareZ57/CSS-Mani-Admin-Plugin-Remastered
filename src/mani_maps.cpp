@@ -161,6 +161,17 @@ void	FreeMaps(void)
 //---------------------------------------------------------------------------------
 // Purpose: Load maps into memory
 //---------------------------------------------------------------------------------
+// Purpose: Is this map on the server (name without "maps/" nor ".bsp", as in the map lists)
+//---------------------------------------------------------------------------------
+int	ManiIsMapValid(const char *map_name)
+{
+	char	path[256];
+
+	snprintf(path, sizeof(path), "maps/%s.bsp", map_name);
+	return engine->IsMapValid(path);
+}
+
+//---------------------------------------------------------------------------------
 void	LoadMaps(const char *map_being_loaded)
 {	
 	FileHandle_t file_handle;
@@ -228,7 +239,7 @@ void	LoadMaps(const char *map_being_loaded)
 				continue;
 			}
 
-			if (engine->IsMapValid(map_name) == 0) 
+			if (ManiIsMapValid(map_name) == 0) 
 			{
 //				MMsg("\n*** Map [%s] is not a valid map !!! *****\n", map_name);
 				continue;
@@ -324,7 +335,7 @@ void	LoadMaps(const char *map_being_loaded)
 			if ((!FStrEq( map_name, "test_speakers"))
 				&& (!FStrEq( map_name, "test_hardware")))
 			{
-				if (engine->IsMapValid(map_name) == 0) 
+				if (ManiIsMapValid(map_name) == 0) 
 				{
 					MMsg("\n*** Map [%s] is not a valid map !!! *****\n", map_name);
 					continue;
@@ -421,7 +432,7 @@ void	LoadMaps(const char *map_being_loaded)
 				continue;
 			}
 
-			if (engine->IsMapValid(map_name) == 0) 
+			if (ManiIsMapValid(map_name) == 0) 
 			{
 				MMsg("\n*** Map [%s] is not a valid map !!! *****\n", map_name);
 				continue;
@@ -815,7 +826,7 @@ PLUGIN_RESULT	ProcessMaMap(player_t *player_ptr, const char	*command_name, const
 	// Change the map
 	char		changemap_cmd[128];
 
-	int	valid_map = engine->IsMapValid(map_name);
+	int	valid_map = ManiIsMapValid(map_name);
 	if (valid_map != 0)
 	{
 		snprintf( changemap_cmd, sizeof(changemap_cmd), "changelevel %s\n", map_name);
@@ -850,7 +861,7 @@ PLUGIN_RESULT	ProcessMaSkipMap(player_t *player_ptr, const char	*command_name, c
 	// Change the map
 	char		changemap_cmd[128];
 
-	int	valid_map = engine->IsMapValid(next_map);
+	int	valid_map = ManiIsMapValid(next_map);
 	if (valid_map != 0)
 	{
 		snprintf( changemap_cmd, sizeof(changemap_cmd), "changelevel %s\n", next_map);

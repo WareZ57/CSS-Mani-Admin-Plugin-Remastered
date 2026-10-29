@@ -78,7 +78,7 @@ void *gamedll = NULL;
 IServerPluginHelpers *helpers = NULL; // special 3rd party plugin helpers from the engine
 IEffects *effects = NULL; // fx
 IEngineSound *esounds = NULL; // sound
-ICvar *g_pCVar = NULL;	// console vars
+extern ICvar *g_pCVar;	// console vars (defined by the SDK's tier1)
 INetworkStringTableContainer *networkstringtable = NULL;
 INetworkStringTable *g_pStringTableManiScreen = NULL;
 IVoiceServer *voiceserver = NULL;

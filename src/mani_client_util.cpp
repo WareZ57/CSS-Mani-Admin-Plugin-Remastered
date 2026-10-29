@@ -348,7 +348,7 @@ GlobalGroupFlag	*GroupList::AddGroup(const char *class_type, const char *group_i
 		return &itr->second;
 	}
 
-	group_list.insert(std::make_pair<DualStriKey, GlobalGroupFlag>(DualStriKey(class_type, group_id),GlobalGroupFlag()));
+	group_list.insert(std::make_pair(DualStriKey(class_type, group_id),GlobalGroupFlag()));
 	return this->Find(class_type, group_id);
 }
 
@@ -434,7 +434,7 @@ GlobalGroupFlag	*LevelList::AddGroup(const char *class_type, const int level_id)
 		return &itr->second;
 	}
 
-	group_list.insert(std::make_pair<DualStrIntKey, GlobalGroupFlag>(DualStrIntKey(class_type, level_id),GlobalGroupFlag()));
+	group_list.insert(std::make_pair(DualStrIntKey(class_type, level_id),GlobalGroupFlag()));
 	return this->Find(class_type, level_id);
 }
 
@@ -677,7 +677,7 @@ bool FlagDescList::AddFlag(const char *class_type, const char *flag_id, const ch
 	}
 	else
 	{
-		flag_desc_list.insert(std::make_pair<DualStrKey, FlagDesc>(DualStrKey(class_type, flag_id), FlagDesc(description)));
+		flag_desc_list.insert(std::make_pair(DualStrKey(class_type, flag_id), FlagDesc(description)));
 		class_type_list.Add(class_type);
 	}
 

@@ -61,7 +61,8 @@
 #include "mani_teamkill.h"
 #include "mani_warmuptimer.h"
 #include "mani_save_scores.h"
-#include "mani_mp_restartgame.h" 
+#include "mani_mp_restartgame.h"
+#include "compat/convar_access.h" 
 #include "mani_vfuncs.h"
 #include "shareddefs.h"
 
@@ -139,9 +140,9 @@ void	ManiMPRestartGame::Load(void)
 			pMPRestartGameCallback = pMPRestartGame->GetChangeCallback(0);
 		}
 #else
-		if (pMPRestartGame->m_fnChangeCallback)
+		if (MANI_CVAR_CALLBACK(pMPRestartGame))
 		{
-			pMPRestartGameCallback = pMPRestartGame->m_fnChangeCallback;
+			pMPRestartGameCallback = MANI_CVAR_CALLBACK(pMPRestartGame);
 		}
 #endif
 
@@ -152,9 +153,9 @@ void	ManiMPRestartGame::Load(void)
 			pMPRestartGame->InstallChangeCallback((FnChangeCallback_t) mp_restart_game_callback);
 		}
 #elif defined ( GAME_ORANGE )
-		pMPRestartGame->m_fnChangeCallback = (FnChangeCallback_t) mp_restart_game_callback;
+		MANI_CVAR_CALLBACK(pMPRestartGame) = (FnChangeCallback_t) mp_restart_game_callback;
 #else
-		pMPRestartGame->m_fnChangeCallback = mp_restart_game_callback;
+		MANI_CVAR_CALLBACK(pMPRestartGame) = mp_restart_game_callback;
 #endif
 
 	}
@@ -173,7 +174,7 @@ void	ManiMPRestartGame::Unload(void)
 //		pMPRestartGame->RemoveChangeCallback((FnChangeCallback_t) mp_restart_game_callback);
 		pMPRestartGame->InstallChangeCallback(pMPRestartGameCallback);
 #else
-		pMPRestartGame->m_fnChangeCallback = pMPRestartGameCallback;
+		MANI_CVAR_CALLBACK(pMPRestartGame) = pMPRestartGameCallback;
 #endif
 	}
 }

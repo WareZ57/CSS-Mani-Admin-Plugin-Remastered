@@ -1642,6 +1642,11 @@ bool vcmp(void *_addr1, void *_addr2, size_t len)
 
 void FindConPrintf(void)
 {
+#if 1
+	// The engine's ConMsg was found by decoding a call in the code of the "echo" command, which no longer
+	// matches today's engine (and cannot work in 64-bit): plain Msg(), which prints to the same console
+	MMsg = (CONPRINTF_FUNC)Msg;
+#else
 	ConCommandBase *pBase = NULL;
 	unsigned char *ptr = NULL;
 
@@ -1715,6 +1720,6 @@ void FindConPrintf(void)
 	Msg("Using Msg()\n");
 	MMsg = (CONPRINTF_FUNC)Msg;
 	return;
-
+#endif
 }
 

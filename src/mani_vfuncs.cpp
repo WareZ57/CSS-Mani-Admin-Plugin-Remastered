@@ -74,11 +74,9 @@ CBaseEntity *EdictToCBE(edict_t *pEdict)
 
 class ManiEmptyClass {};
 
-#ifdef __linux__
-#define VFUNC_OS_DEP void *addr;	} u; 	u.addr = func;
-#else
+// Member function pointer = {address, this adjustment} with both ABIs: the adjustment must be zeroed
+// (on Linux it was left uninitialised, and in 64-bit it is a whole 8-byte word of garbage)
 #define VFUNC_OS_DEP struct {void *addr; intptr_t adjustor;} s; } u; u.s.addr = func; u.s.adjustor = 0;
-#endif
 
 #define VFUNC_SETUP_PTR(_vfunc_index)  \
 { \
@@ -448,10 +446,7 @@ CON_COMMAND(ma_vfuncs, "Debug Tool")
 	        return;
         }
 
-        DWORD   *class_address = type_ptr;
-	DWORD	*vtable_address = (DWORD *) *class_address;
-
-	void **vtable = (void **) vtable_address;
+	void **vtable = *(void ***) type_ptr;	// read as a pointer: a DWORD would cut 64-bit addresses
 
         for (int i = 2; i < atoi(args.Arg(3)); i++)
         {
@@ -785,10 +780,7 @@ static	void CheckVFunc(SymbolMap *sym_map_ptr, DWORD *class_ptr, char *class_nam
 
 static	int FindVFunc(SymbolMap *sym_map_ptr, DWORD *class_ptr, char *class_name, char *class_function, char *mangled_ptr)
 {
-        DWORD   *class_address = class_ptr;
-	DWORD	*vtable_address = (DWORD *) *class_address;
-
-	void **vtable = (void **) vtable_address;
+	void **vtable = *(void ***) class_ptr;	// read as a pointer: a DWORD would cut 64-bit addresses
 
         for (int i = 2; i < 1000; i++)
         {

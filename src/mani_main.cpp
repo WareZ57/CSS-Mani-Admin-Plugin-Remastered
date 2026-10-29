@@ -70,6 +70,7 @@ typedef unsigned long DWORD;
 #include "networkstringtabledefs.h"
 
 #include "mani_main.h"
+#include "compat/convar_access.h"
 #include "mani_timers.h"
 #include "mani_player.h"
 #include "mani_client_flags.h"
@@ -5186,11 +5187,11 @@ void CAdminPlugin::EvPlayerDeath(IGameEvent *event)
 			char cmd[256];
 			snprintf ( cmd, sizeof ( cmd ), "sv_cheats 1;ent_remove %i;sv_cheats 0\n", punish_mode_list[dead_player.index - 1].flame_index );
 			if (sv_cheats->GetInt() == 0) {
-				sv_cheats->m_nFlags &= ~FCVAR_SPONLY;
-				sv_cheats->m_nFlags &= ~FCVAR_NOTIFY;
+				MANI_CVAR_FLAGS(sv_cheats) &= ~FCVAR_SPONLY;
+				MANI_CVAR_FLAGS(sv_cheats) &= ~FCVAR_NOTIFY;
 				engine->ServerCommand( cmd );
-				sv_cheats->m_nFlags &= ~FCVAR_SPONLY;
-				sv_cheats->m_nFlags &= ~FCVAR_NOTIFY;
+				MANI_CVAR_FLAGS(sv_cheats) &= ~FCVAR_SPONLY;
+				MANI_CVAR_FLAGS(sv_cheats) &= ~FCVAR_NOTIFY;
 			} else {
 				engine->ServerCommand( cmd );
 			}

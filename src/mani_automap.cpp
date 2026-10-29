@@ -272,7 +272,7 @@ void	ManiAutoMap::SetupMapList(void)
 			map_name[j] = '\0';
 			if (i != 0)
 			{
-				if (engine->IsMapValid(map_name))
+				if (ManiIsMapValid(map_name))
 				{
 					AddToList((void **) &automap_list, sizeof(automap_id_t), &automap_list_size);
 					Q_strcpy(automap_list[automap_list_size - 1].map_name, map_name);

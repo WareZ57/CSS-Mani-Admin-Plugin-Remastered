@@ -109,7 +109,7 @@ bool	CCSUTILRemove(CBaseEntity *pCBE)
 
 CCSWeaponInfo	*CCSGetFileWeaponInfoFromHandle(unsigned short handle_id)
 {
-	if (!get_file_weapon_info_addr) return false;
+	if (!get_file_weapon_info_addr) return NULL;
 	return CCSGetFileWeaponInfoHandleFunc(handle_id);
 }
 
