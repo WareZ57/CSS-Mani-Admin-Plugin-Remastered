@@ -31,5 +31,7 @@
 // if you don't change them.
 //
 
-"Change playername to Flower" name Flower
+// Removed: clients no longer run "name" (or most commands) sent by the server, they only accept
+// commands flagged FCVAR_SERVER_CAN_EXECUTE. Example kept for reference:
+// "Change playername to Flower" name Flower
 

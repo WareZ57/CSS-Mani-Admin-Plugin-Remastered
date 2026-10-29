@@ -76,7 +76,7 @@
 		// Offsets for extra spawn points hook
 		"spawn_point_control"
 		{
-			"linux_offset"	"2"
+			"linux_offset"	"3"
 			"win_offset"	"2"
 		}
 
@@ -109,27 +109,27 @@
 
 		"vfuncs"
 		{
-			"eye_angles"		"132"
+			"eye_angles"		"136"
 			"set_model_index"		"9"
-			"teleport"		"109"
-			"eye_position"		"131"
-			"give_item"		"401"
-			"my_combat_character"		"72"
-			"get_velocity"		"141"
+			"teleport"		"112"
+			"eye_position"		"135"
+			"give_item"		"410"
+			"my_combat_character"		"75"
+			"get_velocity"		"145"
 			"map_desc"		"12"
-			"ignite"		"209"
-			"weapon_drop"		"263"
-			"user_cmds"		"418" 
-			"set_observer_target"		"375"
-			"weapon_canuse"		"260" 
-			"weapon_switch"		"264" 
-			"remove_player_item"		"270"
-			"get_weapon_slot"		"268"
-			"give_ammo"		"252"
-			"commit_suicide"		"439" 
-			"get_primary_ammo_type"		"328" 
-			"get_secondary_ammo_type"		"329"
-			"weapon_get_name"		"321" 
+			"ignite"		"217"
+			"weapon_drop"		"271"
+			"user_cmds"		"427" 
+			"set_observer_target"		"384"
+			"weapon_canuse"		"268" 
+			"weapon_switch"		"272" 
+			"remove_player_item"		"278"
+			"get_weapon_slot"		"276"
+			"give_ammo"		"260"
+			"commit_suicide"		"448" 
+			"get_primary_ammo_type"		"337" 
+			"get_secondary_ammo_type"		"338"
+			"weapon_get_name"		"330" 
 		}
 
 		"vfuncs_windows"
@@ -178,12 +178,11 @@
 			
 			"CGameRules_gGameRules"
 			{
-				"linux_symbol"	"_ZN20CBaseCombatCharacter22SwitchToNextBestWeaponEP17CBaseCombatWeapon"
+				"linux_symbol"	"g_pGameRules"
 				"sigscan"		"55 8B EC 83 EC 34 53 56 8B F1 57 8D 4D CC"
 				"win_type"		"Indirect"
-				"linux_type"	"Indirect"
-				"win_index"		"109"
-				"linux_index"	"6"		
+				"linux_type"	"Direct"
+				"win_index"		"109" 
 			}
 			
 			"CGlobalEntityList_FindEntityByClassname"
